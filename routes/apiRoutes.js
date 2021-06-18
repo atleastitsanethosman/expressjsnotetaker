@@ -12,8 +12,7 @@ module.exports = (app) => {
   // route to get notes by reading the file and send to webpage.
   app.get('/api/notes', (req, res) => {
     const notesData = getNote()
-    console.log(notesData)  //consider deleting in cleanup.
-    res.send(notesData)
+    res.json(notesData)
     });
 
   // API POST Requests
@@ -30,62 +29,34 @@ module.exports = (app) => {
     notesData.push(newNote);
     //save to db.json file.
     saveNote(notesData);
-    res.send({sucess: true, msg: 'note saved'});
+    res.json({sucess: true, msg: 'note saved'});
   });
 
   // Code for deleting note as selected.
-  app.post('/api/notes/:id', (req, res) => {
-    const id = req.params.id;
-    console.log(id);
-
+  app.delete('/api/notes/:id', (req, res) => {
+    //pull note ID from URL request
+    let deleteId = req.params.id;
+    //pull notes from file.
+    const notesData = getNote();
+    //review each note to see if it matches note ID from delete request, if not moves to new array newNotes and rewrites db.json.
+    let newNotes = []
+    notesData.forEach(element => {
+      if (element.id !== deleteId) {
+        newNotes.push(element);
+      }
+    });
+    saveNote(newNotes);
+    res.json('note deleted');
   });
 };
 
 // functions to read and write db.json file to reuse.
 const saveNote = (data) => {
-  const stringifyData =  JSON.stringify(data)
-  fs.writeFileSync('./db/db.json', stringifyData)
+  const notesData =  JSON.stringify(data)
+  fs.writeFileSync('./db/db.json', notesData)
 };
 
 const getNote = () => {
   const notesString = fs.readFileSync('./db/db.json')
     return JSON.parse(notesString);
 };
-
-
-// app.get('/api/notes', (req, res) => {
-//   fs.readFile('./db/db.json','utf-8',(err, data) => {
-//     if (err) {
-//       console.error(err)
-//     };
-//       res.send(data)
-//     })
-//   }
-// );
-
-// app.post('/api/notes', (req, res) => {
-//   let notesDb = [];
-//   console.log(typeof(notesDb));
-//   fs.readFile('./db/db.json','utf-8',(err, data) => {
-//     if (err) {
-//       console.error(err);
-//     };
-//     notesDb = JSON.parse(data);
-//     console.log(notesDb);
-//     console.log(typeof(notesDb));
-//     // adding unique id with nanoid packaga
-//     req.body.id = nanoid();
-//     console.log(req.body)
-//     notesDb.push(req.body);
-//     console.log(notesDb);
-//     return;
-//   });
-//   fs.writeFileSync('./db/db.json', JSON.stringify(notesDb), (err) => {
-//     if (err) {
-//       console.error(err)
-//       return
-//     };
-//     console.log('note saved')
-//   });
-//   res.send({success: true, msg: 'Note Saved'})
-// });
