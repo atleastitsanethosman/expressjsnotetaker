@@ -16,7 +16,7 @@
   # Description
   
 The note taker is an application built in node JS heavily relying on express to create a application that allows the user to store and delete notes on a webpage.<br>
-  ![](./img/teamprofilegenerator.png) <br>
+  [Link to Deployed Application](<https://msubootcampexpressnotetaker.herokuapp.com>)<br>
   
   # Installation
   
@@ -25,6 +25,7 @@ The note taker is an application built in node JS heavily relying on express to 
   # Usage
   
   After navigating to the starting page the user will click the get started button and then is taken to the note taker page.  If any notes already exist they will be displayed to the left and can be accessed to read or deleted.  There a plus button to generate a new note in the main frame where the user can start typing if they wish to add a new note, once there is text in the note the user has the option to save the note. <br>
+
   ![demo of application](./public/img/demoofapplication.gif) <br>
  
   
